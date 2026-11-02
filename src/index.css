@@ -1,0 +1,565 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f4ede0;
+}
+::-webkit-scrollbar-thumb {
+  background: #bfe7ce;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d9f58;
+}
+
+/* Subtle glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-dark {
+  background: rgba(17, 63, 36, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   FARMDIRECT SESSION 7 — A4 DEDICATED PRINT / PDF STYLESHEET
+   ============================================================ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  /* Reset global document canvas for print */
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force hide all standard web UI elements */
+  nav,
+  footer:not(.cert-footer),
+  header:not(.cert-header),
+  aside:not(.farmdirect-print-certificate),
+  button,
+  .no-print,
+  .print-hidden,
+  .web-only,
+  #root > div > nav,
+  #root > div > footer,
+  .print-label-container {
+    display: none !important;
+  }
+
+  /* Reset layout containers so they do not add extra scroll or height */
+  #root,
+  #root > div,
+  main {
+    min-height: 0 !important;
+    height: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .lg\:pl-64 {
+    padding-left: 0 !important;
+  }
+
+  /* Hide the web screen layout on pages containing the certificate */
+  .web-page-wrapper {
+    display: none !important;
+  }
+
+  /* ============================================================
+     CERTIFICATE CONTAINER & FRAMING (Single A4 Page Guarantee)
+     ============================================================ */
+  .farmdirect-print-certificate {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 186mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    background: #ffffff !important;
+  }
+
+  .cert-card {
+    border: 2px solid #1b4332;
+    padding: 2.5mm;
+    background: #ffffff;
+    box-sizing: border-box;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .cert-border-inner {
+    border: 1px solid #74c69d;
+    padding: 5mm 6mm;
+    box-sizing: border-box;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* HEADER */
+  .cert-header {
+    margin-bottom: 3.5mm;
+  }
+
+  .cert-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2mm;
+  }
+
+  .cert-logo-box {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cert-brand-title {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #0e2f1d;
+    line-height: 1.1;
+  }
+
+  .cert-brand-tagline {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #2d6a4f;
+    margin-top: 1mm;
+    text-transform: uppercase;
+  }
+
+  .cert-id-badge {
+    text-align: right;
+  }
+
+  .cert-id-label {
+    display: block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #64748b;
+  }
+
+  .cert-id-val {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #0e2f1d;
+  }
+
+  .cert-rule-primary {
+    height: 1.5px;
+    background: #1b4332;
+    width: 100%;
+  }
+
+  /* PRODUCT BANNER */
+  .cert-product-banner {
+    background: #f8faf9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 3mm 4mm;
+    margin-bottom: 4mm;
+  }
+
+  .cert-product-meta {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    margin-bottom: 1.5mm;
+  }
+
+  .cert-category-badge {
+    font-size: 8.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: #e8f5e9;
+    color: #1b4332;
+    border: 1px solid #c8e6c9;
+    padding: 0.5mm 2mm;
+    border-radius: 3px;
+  }
+
+  .cert-provenance-status {
+    font-size: 8.5px;
+    font-weight: 700;
+    color: #2e7d32;
+  }
+
+  .cert-product-name {
+    font-size: 21px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    margin: 0 0 1.5mm 0;
+  }
+
+  .cert-farmer-meta {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    font-size: 10.5px;
+    color: #334155;
+  }
+
+  .cert-dot {
+    color: #94a3b8;
+  }
+
+  /* MAIN 2-COLUMN GRID (40% QR + 60% INFO) */
+  .cert-main-grid {
+    display: flex;
+    gap: 6mm;
+    margin-bottom: 4mm;
+    align-items: flex-start;
+  }
+
+  .cert-qr-column {
+    flex: 0 0 38%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 3.5mm;
+    background: #fafafa;
+    box-sizing: border-box;
+  }
+
+  .cert-qr-frame {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 1.5mm;
+    border-radius: 3px;
+    margin-bottom: 2mm;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cert-qr-image {
+    width: 38mm;
+    height: 38mm;
+    min-width: 38mm;
+    min-height: 38mm;
+    display: block;
+    object-fit: contain;
+  }
+
+  .cert-qr-placeholder {
+    width: 38mm;
+    height: 38mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #94a3b8;
+  }
+
+  .cert-qr-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5mm;
+  }
+
+  .cert-qr-action {
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #0e2f1d;
+  }
+
+  .cert-qr-sub {
+    font-size: 7.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #64748b;
+  }
+
+  .cert-qr-url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 7.5px;
+    color: #475569;
+    margin-top: 1mm;
+    word-break: break-all;
+  }
+
+  .cert-info-column {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .cert-table-header {
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 2mm 3.5mm;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #1e293b;
+  }
+
+  .cert-attr-table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cert-attr-row {
+    display: flex;
+    align-items: baseline;
+    padding: 1.8mm 3.5mm;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 10px;
+  }
+
+  .cert-attr-row-last {
+    border-bottom: none;
+  }
+
+  .cert-attr-label {
+    flex: 0 0 34%;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #475569;
+    font-size: 9px;
+  }
+
+  .cert-attr-value {
+    flex: 1;
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 10px;
+    word-break: break-word;
+  }
+
+  .cert-batch-val {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 800;
+    color: #0e2f1d;
+  }
+
+  .text-forest {
+    color: #1b4332;
+  }
+
+  .text-muted {
+    color: #64748b;
+    font-style: italic;
+  }
+
+  /* TIMELINE SECTION */
+  .cert-timeline-section {
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: #f8faf9;
+    padding: 3mm 4mm;
+    margin-bottom: 4mm;
+  }
+
+  .cert-timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2.5mm;
+    padding-bottom: 1.5mm;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .cert-timeline-title {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    color: #0e2f1d;
+  }
+
+  .cert-timeline-sub {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: #64748b;
+  }
+
+  .cert-timeline-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5mm;
+  }
+
+  .cert-timeline-node {
+    display: flex;
+    align-items: center;
+    gap: 1.5mm;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .cert-node-icon {
+    width: 4.5mm;
+    height: 4.5mm;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7.5px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .cert-node-icon-done {
+    background: #1b4332;
+    color: #ffffff;
+  }
+
+  .cert-node-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .cert-node-stage {
+    font-size: 7.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #2d6a4f;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .cert-node-title {
+    font-size: 8.5px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cert-node-desc {
+    font-size: 7.5px;
+    color: #64748b;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cert-timeline-arrow {
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: bold;
+    flex-shrink: 0;
+    padding: 0 0.5mm;
+  }
+
+  /* FOOTER */
+  .cert-footer {
+    margin-top: 2mm;
+  }
+
+  .cert-rule-secondary {
+    height: 1px;
+    background: #cbd5e1;
+    width: 100%;
+    margin-bottom: 2.5mm;
+  }
+
+  .cert-footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4mm;
+  }
+
+  .cert-footer-left {
+    flex: 1;
+  }
+
+  .cert-footer-main-text {
+    font-size: 8.5px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.5mm 0;
+  }
+
+  .cert-footer-disclaimer {
+    font-size: 7.5px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .cert-footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    border-left: 1px solid #e2e8f0;
+    padding-left: 3mm;
+    flex-shrink: 0;
+  }
+
+  .cert-seal-text {
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    color: #1b4332;
+  }
+
+  .cert-seal-sub {
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #64748b;
+  }
+}
+

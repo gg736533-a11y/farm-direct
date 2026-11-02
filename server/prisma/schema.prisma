@@ -1,0 +1,206 @@
+// Prisma Schema for FarmDirect MySQL Database
+// Designed for Session 5 API Foundation & Future Sessions
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// User Roles supported in FarmDirect
+enum Role {
+  CONSUMER
+  FARMER
+}
+
+// Farmer Verification Lifecycle Statuses
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+// Product Inventory Statuses
+enum ProductStatus {
+  ACTIVE
+  OUT_OF_STOCK
+  DRAFT
+  INACTIVE
+}
+
+// Consumer Order Fulfillment Statuses
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PACKED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+// Supported Mock Payment Methods
+enum PaymentMethod {
+  COD
+  UPI
+  CARD
+}
+
+// ----------------------------------------------------
+// 1. Core User Model
+// ----------------------------------------------------
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  phone        String?
+  role         Role      @default(CONSUMER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // 1-to-1 Profile Relations
+  consumerProfile ConsumerProfile?
+  farmerProfile   FarmerProfile?
+
+  @@index([email])
+}
+
+// ----------------------------------------------------
+// 2. Farmer Profile
+// ----------------------------------------------------
+model FarmerProfile {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  farmName           String
+  location           String
+  description        String?
+  farmAcreage        Float?
+  verified           Boolean            @default(false)
+  verificationStatus VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  // Relations
+  products   Product[]
+  orderItems OrderItem[]
+}
+
+// ----------------------------------------------------
+// 3. Consumer Profile
+// ----------------------------------------------------
+model ConsumerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  orders    Order[]
+  favorites Favorite[]
+}
+
+// ----------------------------------------------------
+// 4. Product Catalog Model
+// ----------------------------------------------------
+model Product {
+  id                String        @id @default(cuid())
+  farmerId          String
+  farmer            FarmerProfile @relation(fields: [farmerId], references: [id], onDelete: Cascade)
+  name              String
+  category          String
+  description       String
+  price             Float
+  unit              String
+  quantity          Int           @default(0)
+  availableQuantity Int           @default(0)
+  imageUrl          String?
+  location          String
+  status            ProductStatus @default(ACTIVE)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // 1-to-1 Transparency & Order Relations
+  transparency ProductTransparency?
+  orderItems   OrderItem[]
+  favorites    Favorite[]
+
+  @@index([category])
+  @@index([farmerId])
+  @@index([status])
+}
+
+// ----------------------------------------------------
+// 5. Product Transparency & Traceability
+// ----------------------------------------------------
+model ProductTransparency {
+  id          String    @id @default(cuid())
+  productId   String    @unique
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  harvestDate DateTime?
+  packingDate DateTime?
+  expiryDate  DateTime?
+  ingredients String?
+  origin      String?
+  batchNumber String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ----------------------------------------------------
+// 6. Consumer Orders
+// ----------------------------------------------------
+model Order {
+  id              String        @id @default(cuid())
+  consumerId      String
+  consumer        ConsumerProfile @relation(fields: [consumerId], references: [id], onDelete: Restrict)
+  status          OrderStatus   @default(PENDING)
+  totalAmount     Float
+  deliveryAddress String
+  paymentMethod   PaymentMethod @default(COD)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // 1-to-Many Order Items
+  items OrderItem[]
+
+  @@index([consumerId])
+  @@index([status])
+}
+
+// ----------------------------------------------------
+// 7. Order Item (Preserves historical purchase price)
+// ----------------------------------------------------
+model OrderItem {
+  id        String        @id @default(cuid())
+  orderId   String
+  order     Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
+  farmerId  String
+  farmer    FarmerProfile @relation(fields: [farmerId], references: [id], onDelete: Restrict)
+  quantity  Int
+  unitPrice Float
+  subtotal  Float
+}
+
+// ----------------------------------------------------
+// 8. Saved Favorites
+// ----------------------------------------------------
+model Favorite {
+  id         String          @id @default(cuid())
+  consumerId String
+  consumer   ConsumerProfile @relation(fields: [consumerId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt  DateTime        @default(now())
+
+  // Ensure one favorite per consumer/product pair
+  @@unique([consumerId, productId])
+  @@index([consumerId])
+}
